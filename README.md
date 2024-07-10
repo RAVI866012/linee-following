@@ -1,24 +1,23 @@
-# linee-following
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h>
+#include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
 
-String command;             //String to store app command state.
-int speedCar = 800;         // 400 - 1023.
+String command;            
+int speedCar = 800;         
 int speed_Coeff = 3;
 
-const char* ssid = "NodeMCU Car";//Wifi id name
+const char* ssid = "NodeMCU Car";
 ESP8266WebServer server(80);
 
-#define ENA   14          // Enable/speed motors Right        GPIO14(D5)
-#define ENB   12          // Enable/speed motors Left         GPIO12(D6)
-#define IN_1  15          // L298N in1 motors Right           GPIO15(D8)
-#define IN_2  13          // L298N in2 motors Right           GPIO13(D7)
-#define IN_3  2           // L298N in3 motors Left            GPIO2(D4)
-#define IN_4  0           // L298N in4 motors Left            GPIO0(D3)
+#define ENA   14          
+#define ENB   12          
+#define IN_1  15          
+#define IN_2  13          
+#define IN_3  2           
+#define IN_4  0           
 
-#define IR_LEFT  4       // Left IR sensor pin
-#define IR_RIGHT    5    // Right IR sensor pin
+#define IR_LEFT  4       
+#define IR_RIGHT    5    
 
 void setup() {
   pinMode(ENA, OUTPUT);
@@ -33,7 +32,7 @@ void setup() {
   
   Serial.begin(96000);
   
-  // Connecting WiFi
+  
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid);
 
@@ -41,7 +40,7 @@ void setup() {
   Serial.print("AP IP address: ");
   Serial.println(myIP);
  
-  // Starting WEB-server 
+  
   server.on ( "/", HTTP_handleRoot );
   server.onNotFound ( HTTP_handleRoot );
   server.begin();    
@@ -138,32 +137,31 @@ void stopRobot(){
 }
 
 void loop() {
-  // Read IR sensor value
+  
   int leftIRValue = digitalRead(IR_LEFT);
   
-  // Check if the robot is on the line
+  
   if (leftIRValue == 0) {
-    // Robot is on the black line, move forward
+    
     goAhead();
   } else {
-    // Robot is not on the line, turn right
+    
     goRight();
   }
 
   int rightIRValue = digitalRead(IR_RIGHT);
   
-  // Check if the robot is on the line
+ 
   if (leftIRValue == 1 && rightIRValue == 1) {
-    // Robot is on the line, move forward
+    
     goAhead();
   } else if (leftIRValue == 1) {
-    // Robot is on the left line, turn right
+
     goRight();
   } else if (rightIRValue == 1) {
-    // Robot is on the right line, turn left
+    
     goLeft();
   } else {
-    // Robot is not on the line, stop
     stopRobot();
   }
 
@@ -189,13 +187,13 @@ void loop() {
   else if (command == "9") speedCar = 1023;
   else if (command == "S") stopRobot();
   
-  // Read IR sensor values
 }
   
 
 void HTTP_handleRoot(void)
  {
-  if( server.hasArg("State") ){
+  if( server.hasArg("State") )
+  {
     Serial.println(server.arg("State"));
   }
   server.send ( 200, "text/html", "" );
